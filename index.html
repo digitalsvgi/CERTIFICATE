@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CertifyPro | Premium Certificate Generator by SVGI</title>
+    <meta name="description" content="Generate professional certificates in bulk from Excel data with ease.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <div class="logo">
+                <i data-lucide="award" class="icon-logo"></i>
+                <h1>Certify<span>Pro</span></h1>
+            </div>
+            <p class="subtitle">Sri Venkateshwaraa Group Of Institutions @ DM​</p>
+        </header>
+
+        <main>
+            <div class="grid-container">
+                <!-- Step 1: Uploads -->
+                <section class="control-panel">
+                    <div class="card glass">
+                        <h3><i data-lucide="upload-cloud"></i> 1. Upload Assets</h3>
+
+                        <div class="upload-group">
+                            <label for="templateInput" class="upload-label">
+                                <div class="upload-box" id="templateBox">
+                                    <i data-lucide="image"></i>
+                                    <span>Upload Image Template</span>
+                                    <small>PNG, JPG (High Res recommended)</small>
+                                </div>
+                            </label>
+                            <input type="file" id="templateInput" accept="image/*" hidden>
+                        </div>
+
+                        <div class="upload-group">
+                            <label for="excelInput" class="upload-label">
+                                <div class="upload-box" id="excelBox">
+                                    <i data-lucide="file-spreadsheet"></i>
+                                    <span>Upload Excel/CSV Data</span>
+                                    <small>.xlsx, .csv</small>
+                                </div>
+                            </label>
+                            <input type="file" id="excelInput" accept=".xlsx, .xls, .csv" hidden>
+                        </div>
+                    </div>
+
+                    <div class="card glass config-card" id="configPanel" style="display: none;">
+                        <h3><i data-lucide="settings"></i> 2. Configuration</h3>
+
+                        <div class="form-group">
+                            <label>Mapping Column</label>
+                            <select id="columnSelect" class="input-modern">
+                                <option value="">Select Name Column</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Font Family</label>
+                            <select id="fontFamily" class="input-modern">
+                                <option value="Poppins">Poppins</option>
+                                <option value="Barlow">Barlow</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                            </select>
+                        </div>
+
+                        <div class="flex-row">
+                            <div class="form-group">
+                                <label>Font Size</label>
+                                <input type="number" id="fontSize" value="80" class="input-modern">
+                            </div>
+                            <div class="form-group">
+                                <label>Color</label>
+                                <input type="color" id="fontColor" value="#1a1a1a" class="input-modern color-picker">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Text Alignment</label>
+                            <div class="align-buttons">
+                                <button class="btn-icon active" data-align="left"><i
+                                        data-lucide="align-left"></i></button>
+                                <button class="btn-icon" data-align="center"><i data-lucide="align-center"></i></button>
+                                <button class="btn-icon" data-align="right"><i data-lucide="align-right"></i></button>
+                            </div>
+                        </div>
+
+                        <button id="downloadBtn" class="btn-primary" disabled>
+                            <i data-lucide="download"></i> Generate & Download ZIP (PNG)
+                        </button>
+
+                        <button id="downloadPdfBtn" class="btn-secondary-outline" disabled>
+                            <i data-lucide="file-text"></i> Generate & Download PDF
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Step 2: Preview -->
+                <section class="preview-panel">
+                    <div class="card glass preview-card">
+                        <div class="preview-header">
+                            <h3><i data-lucide="eye"></i> Live Preview</h3>
+                            <span class="badge" id="dataCount">0 Records Found</span>
+                        </div>
+                        <div class="canvas-container" id="canvasContainer">
+                            <div class="placeholder-text">
+                                <i data-lucide="layout" class="placeholder-icon"></i>
+                                <p>Upload a template to start previewing</p>
+                            </div>
+                            <canvas id="previewCanvas"></canvas>
+                            <div id="draggableText" class="draggable" style="display: none;">
+                                <span>Sample Name</span>
+                                <div class="resizer"></div>
+                            </div>
+                        </div>
+                        <p class="hint">Drag the text to position it on the certificate.</p>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+            <div class="loader"></div>
+            <p>Generating Certificates... <span id="progress">0</span>%</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>
